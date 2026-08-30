@@ -234,7 +234,7 @@ export function PlanGrid({
 
       <div
         className={cn(
-          "mt-11 grid gap-5 sm:grid-cols-2",
+          "mt-9 grid gap-5 sm:grid-cols-2",
           columns === 4 ? "lg:grid-cols-4" : "lg:grid-cols-3",
         )}
       >
@@ -243,7 +243,7 @@ export function PlanGrid({
         ))}
       </div>
 
-      <p className="mt-8 text-center text-[13px] text-content-subtle">
+      <p className="mt-7 text-center text-[13px] text-content-subtle">
         Prices exclude 18% GST. Renewals are billed at the same rate you signed
         up on —{" "}
         <span className="font-semibold text-content-muted">guaranteed.</span>

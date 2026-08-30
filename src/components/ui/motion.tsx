@@ -112,16 +112,26 @@ export function RevealItem({
 /**
  * Drives a MotionValue rather than React state, so counting costs no
  * re-renders and the linter stays happy about setState-in-effect.
+ *
+ * Formatting is described with plain props rather than a callback: server
+ * components render this directly, and functions can't cross that boundary.
  */
 export function CountUp({
   value,
-  format,
+  decimals = 0,
+  prefix = "",
+  suffix = "",
+  group = false,
   duration = 1.5,
   className,
 }: {
   value: number;
-  /** Turns the in-flight number into display text, e.g. n => `${n|0}ms` */
-  format: (n: number) => string;
+  /** Fixed decimal places held throughout the count, so width doesn't jump. */
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+  /** Apply en-IN digit grouping, e.g. 5,000 */
+  group?: boolean;
   duration?: number;
   className?: string;
 }) {
@@ -130,7 +140,15 @@ export function CountUp({
   const reduce = useReducedMotion();
 
   const raw = useMotionValue(reduce ? value : 0);
-  const text = useTransform(raw, format);
+  const text = useTransform(raw, (n: number) => {
+    const body = group
+      ? new Intl.NumberFormat("en-IN", {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }).format(n)
+      : n.toFixed(decimals);
+    return `${prefix}${body}${suffix}`;
+  });
 
   useEffect(() => {
     if (!inView || reduce) return;

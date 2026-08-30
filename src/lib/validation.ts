@@ -50,6 +50,47 @@ export const registerSchema = z
 
 export type RegisterValues = z.infer<typeof registerSchema>;
 
+/**
+ * Registration inside checkout. Same rules as the full form minus the
+ * confirm-password field — one less thing between the customer and the order.
+ */
+export const checkoutRegisterSchema = z.object({
+  fullName: z
+    .string()
+    .trim()
+    .min(2, "Enter your full name")
+    .max(60, "That name is too long"),
+  email: emailSchema,
+  phone: phoneSchema,
+  password: passwordSchema,
+  terms: z.boolean().refine((v) => v === true, {
+    message: "Please accept the terms to continue",
+  }),
+});
+
+export type CheckoutRegisterValues = z.infer<typeof checkoutRegisterSchema>;
+
+export const billingSchema = z.object({
+  addressLine: z.string().trim().min(5, "Enter your street address"),
+  city: z.string().trim().min(2, "Enter your city"),
+  state: z.string().trim().min(2, "Select your state"),
+  pincode: z
+    .string()
+    .trim()
+    .regex(/^[1-9]\d{5}$/, "Enter a valid 6-digit PIN code"),
+  gstin: z
+    .string()
+    .trim()
+    .regex(
+      /^\d{2}[A-Z]{5}\d{4}[A-Z][A-Z0-9]Z[A-Z0-9]$/,
+      "That doesn't look like a valid GSTIN",
+    )
+    .or(z.literal(""))
+    .optional(),
+});
+
+export type BillingValues = z.infer<typeof billingSchema>;
+
 export const otpSchema = z.object({
   code: z
     .string()

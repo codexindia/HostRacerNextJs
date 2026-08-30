@@ -23,9 +23,10 @@ import {
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { LogoLink } from "@/components/brand/logo";
+import { CartButton } from "@/components/layout/cart-button";
 import { Button, ButtonLink } from "@/components/ui/button";
 import { Badge, Container } from "@/components/ui/primitives";
-import { primaryNav, site, type NavEntry } from "@/lib/site";
+import { primaryNav, site, type NavEntry } from "@/config/site.config";
 import { cn } from "@/lib/utils";
 
 const icons: Record<string, LucideIcon> = {
@@ -472,6 +473,8 @@ export function SiteHeader() {
               <Phone className="size-[15px]" />
               {site.contact.phone}
             </a>
+
+            <CartButton overDark={overDark} />
 
             <ThemeToggle overDark={overDark} />
 

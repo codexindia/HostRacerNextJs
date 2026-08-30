@@ -39,10 +39,19 @@ export const billingCycles: BillingCycle[] = [
 
 export const DEFAULT_CYCLE: BillingCycleId = "12mo";
 
-/** Per-term pricing. `monthly` is what we advertise; `mrpMonthly` is the strike-through. */
+/**
+ * Per-term pricing. `monthly` is the advertised rate; `mrpMonthly` is the
+ * strike-through.
+ *
+ * `total` exists because the advertised monthly rate is a rounded figure —
+ * ₹1,299/year reads as "₹109/mo", but 109 × 12 is ₹1,308. Where a headline
+ * annual price is published, set `total` so checkout charges exactly that.
+ * Terms without one fall back to monthly × months.
+ */
 export type TermPrice = {
   monthly: number;
   mrpMonthly: number;
+  total?: number;
 };
 
 export type PlanCategory = "shared" | "wordpress" | "reseller" | "vps";
@@ -97,7 +106,7 @@ export const sharedPlans: Plan[] = [
     ],
     prices: {
       "1mo": { monthly: 149, mrpMonthly: 199 },
-      "12mo": { monthly: 59, mrpMonthly: 99 },
+      "12mo": { monthly: 59, mrpMonthly: 99, total: 699 },
       "24mo": { monthly: 49, mrpMonthly: 99 },
       "48mo": { monthly: 45, mrpMonthly: 99 },
     },
@@ -132,7 +141,7 @@ export const sharedPlans: Plan[] = [
     ],
     prices: {
       "1mo": { monthly: 249, mrpMonthly: 329 },
-      "12mo": { monthly: 109, mrpMonthly: 199 },
+      "12mo": { monthly: 109, mrpMonthly: 199, total: 1299 },
       "24mo": { monthly: 95, mrpMonthly: 199 },
       "48mo": { monthly: 89, mrpMonthly: 199 },
     },
@@ -165,7 +174,7 @@ export const sharedPlans: Plan[] = [
     ],
     prices: {
       "1mo": { monthly: 349, mrpMonthly: 449 },
-      "12mo": { monthly: 169, mrpMonthly: 299 },
+      "12mo": { monthly: 169, mrpMonthly: 299, total: 1999 },
       "24mo": { monthly: 149, mrpMonthly: 299 },
       "48mo": { monthly: 139, mrpMonthly: 299 },
     },
@@ -198,7 +207,7 @@ export const sharedPlans: Plan[] = [
     ],
     prices: {
       "1mo": { monthly: 499, mrpMonthly: 649 },
-      "12mo": { monthly: 249, mrpMonthly: 449 },
+      "12mo": { monthly: 249, mrpMonthly: 449, total: 2999 },
       "24mo": { monthly: 229, mrpMonthly: 449 },
       "48mo": { monthly: 209, mrpMonthly: 449 },
     },
@@ -762,7 +771,8 @@ export function getCycle(id: BillingCycleId): BillingCycle {
 
 /** Total charged up front for a plan on a given term. */
 export function termTotal(plan: Plan, cycle: BillingCycleId): number {
-  return plan.prices[cycle].monthly * getCycle(cycle).months;
+  const price = plan.prices[cycle];
+  return price.total ?? price.monthly * getCycle(cycle).months;
 }
 
 /** What the same term would have cost at list price. */

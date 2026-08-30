@@ -3,7 +3,7 @@ import { ArrowRight, Compass } from "lucide-react";
 import { LogoLink } from "@/components/brand/logo";
 import { ButtonLink } from "@/components/ui/button";
 import { Container, Eyebrow, SpeedRule } from "@/components/ui/primitives";
-import { site } from "@/lib/site";
+import { site } from "@/config/site.config";
 
 const shortcuts = [
   { label: "Shared hosting", href: "/hosting/shared" },

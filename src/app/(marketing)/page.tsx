@@ -23,6 +23,12 @@ import { TelemetryCard } from "@/components/home/telemetry-card";
 import { PlanGrid } from "@/components/pricing/plan-grid";
 import { ButtonLink } from "@/components/ui/button";
 import {
+  CountUp,
+  Reveal,
+  RevealGroup,
+  RevealItem,
+} from "@/components/ui/motion";
+import {
   Badge,
   Container,
   Eyebrow,
@@ -30,7 +36,7 @@ import {
   SpeedRule,
 } from "@/components/ui/primitives";
 import { sharedPlans, tlds } from "@/lib/catalog";
-import { site } from "@/lib/site";
+import { site } from "@/config/site.config";
 import { inrNumber } from "@/lib/utils";
 
 /* ================================================================== */
@@ -42,6 +48,13 @@ const heroTrust = [
   { Icon: Globe, label: "Free domain for a year" },
   { Icon: Lock, label: "Free SSL, always" },
   { Icon: RefreshCw, label: "Free migration" },
+];
+
+const heroStats = [
+  { label: "Happy customers", value: 5000, suffix: "+", group: true },
+  { label: "Customer rating", value: 4.9, decimals: 1, suffix: "/5" },
+  { label: "Uptime record", value: 99.9, decimals: 1, suffix: "%" },
+  { label: "Avg. response", value: 45, suffix: "ms" },
 ];
 
 function Hero() {
@@ -62,31 +75,31 @@ function Hero() {
       />
 
       <Container className="relative">
-        <div className="grid items-center gap-14 py-16 lg:grid-cols-[1.08fr_.92fr] lg:gap-16 lg:py-24">
-          {/* Copy */}
-          <div className="animate-race-in">
-            <Eyebrow onDark className="mb-6">
+        <div className="grid items-center gap-12 py-12 lg:grid-cols-[1.08fr_.92fr] lg:gap-14 lg:py-20">
+          {/* Copy — cascades in on load, no scroll trigger above the fold */}
+          <div>
+            <Eyebrow onDark className="mb-6 animate-race-in">
               <SpeedRule className="w-9" />
               Made in India · {site.stats.states} states served
             </Eyebrow>
 
-            <h1 className="text-[clamp(2.4rem,5.6vw,3.9rem)] leading-[1.04] font-extrabold text-white">
+            <h1 className="animate-race-in text-[clamp(2.4rem,5.6vw,3.9rem)] leading-[1.04] font-extrabold text-white [animation-delay:90ms]">
               India&rsquo;s fastest hosting,
               <br className="hidden sm:block" /> from{" "}
               <span className="text-gradient-racer">₹59 a month.</span>
             </h1>
 
-            <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-white/65">
+            <p className="animate-race-in mt-6 max-w-xl text-[17px] leading-relaxed text-white/65 [animation-delay:180ms]">
               NVMe servers tuned for Indian visitors, a free domain, free SSL and
               a support team that actually picks up. No lock-in, no renewal
               shock.
             </p>
 
-            <div className="mt-9 max-w-xl">
+            <div className="animate-race-in mt-9 max-w-xl [animation-delay:270ms]">
               <DomainSearch />
             </div>
 
-            <div className="mt-9 flex flex-wrap gap-x-6 gap-y-3">
+            <div className="animate-race-in mt-9 flex flex-wrap gap-x-6 gap-y-3 [animation-delay:360ms]">
               {heroTrust.map(({ Icon, label }) => (
                 <span
                   key={label}
@@ -100,7 +113,7 @@ function Hero() {
           </div>
 
           {/* Instrument panel */}
-          <div className="animate-race-in [animation-delay:120ms] lg:pl-6">
+          <div className="animate-race-in [animation-delay:200ms] lg:pl-6">
             <TelemetryCard />
           </div>
         </div>
@@ -110,18 +123,19 @@ function Hero() {
       <div className="relative border-t border-white/10">
         <Container>
           <dl className="grid grid-cols-2 divide-x divide-white/10 md:grid-cols-4">
-            {[
-              { label: "Happy customers", value: site.stats.customers },
-              { label: "Customer rating", value: site.stats.rating },
-              { label: "Uptime record", value: site.stats.uptime },
-              { label: "Avg. response", value: `${site.stats.responseMs}ms` },
-            ].map((stat, i) => (
+            {heroStats.map((stat, i) => (
               <div
                 key={stat.label}
                 className={`px-4 py-7 text-center ${i === 0 ? "border-l border-white/10 md:border-l-0" : ""}`}
               >
-                <dd className="font-mono text-[26px] leading-none font-bold text-white tnum">
-                  {stat.value}
+                <dd>
+                  <CountUp
+                    value={stat.value}
+                    decimals={stat.decimals}
+                    suffix={stat.suffix}
+                    group={stat.group}
+                    className="font-mono text-[26px] leading-none font-bold text-white tnum"
+                  />
                 </dd>
                 <dt className="mt-2 text-[12.5px] text-white/45">
                   {stat.label}
@@ -178,20 +192,22 @@ const products = [
 
 function Products() {
   return (
-    <section className="py-20 lg:py-24">
+    <section className="py-14 lg:py-16">
       <Container>
-        <SectionHeading
-          eyebrow="What we host"
-          title="Pick the lane that fits your project"
-          lede="Start small on shared hosting and move up to a VPS when your traffic asks for it. Migrations between our plans are free and handled by us."
-        />
+        <Reveal>
+          <SectionHeading
+            eyebrow="What we host"
+            title="Pick the lane that fits your project"
+            lede="Start small on shared hosting and move up to a VPS when your traffic asks for it. Migrations between our plans are free and handled by us."
+          />
+        </Reveal>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <RevealGroup className="mt-11 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {products.map(({ Icon, title, blurb, price, href, badge }) => (
+            <RevealItem key={title} className="flex">
             <Link
-              key={title}
               href={href}
-              className="group relative flex flex-col rounded-[16px] border border-line bg-surface p-6 transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-[0_20px_44px_-26px_rgba(109,64,228,0.45)] dark:hover:border-brand-500/40"
+              className="group relative flex flex-1 flex-col rounded-[16px] border border-line bg-surface p-6 transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-[0_20px_44px_-26px_rgba(109,64,228,0.45)] dark:hover:border-brand-500/40"
             >
               {badge && (
                 <Badge
@@ -225,8 +241,9 @@ function Products() {
                 <MoveRight className="size-4 text-content-subtle transition-transform duration-300 group-hover:translate-x-1 group-hover:text-brand-600 dark:group-hover:text-brand-400" />
               </div>
             </Link>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </Container>
     </section>
   );
@@ -238,15 +255,19 @@ function Products() {
 
 function Pricing() {
   return (
-    <section id="pricing" className="scroll-mt-24 py-20 lg:py-24">
+    <section id="pricing" className="scroll-mt-24 py-14 lg:py-16">
       <Container>
-        <SectionHeading
-          eyebrow="Shared hosting"
-          title="Honest pricing, printed in full"
-          lede="The price you sign up on is the price you renew on. Every plan includes free SSL, free migration and our 7-day money-back guarantee."
-          className="mb-12"
-        />
-        <PlanGrid plans={sharedPlans} />
+        <Reveal>
+          <SectionHeading
+            eyebrow="Shared hosting"
+            title="Honest pricing, printed in full"
+            lede="The price you sign up on is the price you renew on. Every plan includes free SSL, free migration and our 7-day money-back guarantee."
+            className="mb-9"
+          />
+        </Reveal>
+        <Reveal delay={0.1}>
+          <PlanGrid plans={sharedPlans} />
+        </Reveal>
       </Container>
     </section>
   );
@@ -293,7 +314,7 @@ function WhyUs() {
 
       <Container className="relative">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,.85fr)_minmax(0,1.15fr)] lg:gap-16">
-          <div className="lg:sticky lg:top-28 lg:self-start">
+          <Reveal className="lg:sticky lg:top-28 lg:self-start">
             <SectionHeading
               onDark
               align="left"
@@ -310,13 +331,13 @@ function WhyUs() {
               About us
               <ArrowRight />
             </ButtonLink>
-          </div>
+          </Reveal>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <RevealGroup className="grid gap-4 sm:grid-cols-2">
             {reasons.map(({ Icon, title, body }) => (
-              <div
+              <RevealItem
                 key={title}
-                className="rounded-[16px] border border-white/10 bg-white/[0.035] p-6 backdrop-blur-sm transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.06]"
+                className="h-full rounded-[16px] border border-white/10 bg-white/[0.035] p-6 backdrop-blur-sm transition-colors duration-300 hover:border-white/20 hover:bg-white/[0.06]"
               >
                 <span className="grid size-10 place-items-center rounded-[10px] border border-white/12 bg-white/5 text-flag-400">
                   <Icon className="size-[19px]" />
@@ -327,9 +348,9 @@ function WhyUs() {
                 <p className="mt-2 text-[13.5px] leading-relaxed text-white/55">
                   {body}
                 </p>
-              </div>
+              </RevealItem>
             ))}
-          </div>
+          </RevealGroup>
         </div>
       </Container>
     </section>
@@ -344,9 +365,9 @@ function Domains() {
   const featured = tlds.slice(0, 6);
 
   return (
-    <section className="py-20 lg:py-24">
+    <section className="py-14 lg:py-16">
       <Container>
-        <div className="overflow-hidden rounded-[20px] border border-line bg-surface">
+        <Reveal className="overflow-hidden rounded-[20px] border border-line bg-surface">
           <div className="grid lg:grid-cols-2">
             {/* Copy + search */}
             <div className="p-8 lg:p-12">
@@ -432,7 +453,7 @@ function Domains() {
               </ul>
             </div>
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );
@@ -489,19 +510,21 @@ const testimonials = [
 
 function Testimonials() {
   return (
-    <section className="border-y border-line bg-surface-2 py-20 lg:py-24">
+    <section className="border-y border-line bg-surface-2 py-14 lg:py-16">
       <Container>
-        <SectionHeading
-          eyebrow="Customer stories"
-          title="Rated 4.9 out of 5 by Indian business owners"
-          lede={`${site.stats.customers} customers, ${site.stats.states} states, and a support team that has never once told anyone to "clear your cache and try again".`}
-        />
+        <Reveal>
+          <SectionHeading
+            eyebrow="Customer stories"
+            title="Rated 4.9 out of 5 by Indian business owners"
+            lede={`${site.stats.customers} customers, ${site.stats.states} states, and a support team that has never once told anyone to "clear your cache and try again".`}
+          />
+        </Reveal>
 
-        <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <RevealGroup className="mt-11 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {testimonials.map((t) => (
+            <RevealItem key={t.name} className="flex">
             <figure
-              key={t.name}
-              className="flex flex-col rounded-[16px] border border-line bg-surface p-6"
+              className="flex flex-1 flex-col rounded-[16px] border border-line bg-surface p-6"
             >
               <Quote
                 aria-hidden
@@ -543,8 +566,9 @@ function Testimonials() {
                 </span>
               </figcaption>
             </figure>
+            </RevealItem>
           ))}
-        </div>
+        </RevealGroup>
       </Container>
     </section>
   );
@@ -583,10 +607,10 @@ const faqs = [
 
 function Faq() {
   return (
-    <section className="py-20 lg:py-24">
+    <section className="py-14 lg:py-16">
       <Container>
         <div className="grid gap-12 lg:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)] lg:gap-16">
-          <div className="lg:sticky lg:top-28 lg:self-start">
+          <Reveal className="lg:sticky lg:top-28 lg:self-start">
             <SectionHeading
               align="left"
               eyebrow="Questions"
@@ -604,9 +628,9 @@ function Faq() {
               Ask on WhatsApp
               <ArrowRight />
             </ButtonLink>
-          </div>
+          </Reveal>
 
-          <div className="divide-y divide-line border-y border-line">
+          <Reveal delay={0.08} className="divide-y divide-line border-y border-line">
             {faqs.map((faq) => (
               <details key={faq.q} className="group py-5">
                 <summary className="flex cursor-pointer list-none items-start justify-between gap-6 text-[15.5px] font-semibold text-content [&::-webkit-details-marker]:hidden">
@@ -629,7 +653,7 @@ function Faq() {
                 </p>
               </details>
             ))}
-          </div>
+          </Reveal>
         </div>
       </Container>
     </section>
@@ -642,9 +666,9 @@ function Faq() {
 
 function ClosingCta() {
   return (
-    <section className="pb-20 lg:pb-24">
+    <section className="pb-14 lg:pb-16">
       <Container>
-        <div className="relative overflow-hidden rounded-[20px] bg-ink-950 px-8 py-14 text-center text-white lg:px-16 lg:py-20">
+        <Reveal className="relative overflow-hidden rounded-[20px] bg-ink-950 px-8 py-14 text-center text-white lg:px-16 lg:py-20">
           <div
             aria-hidden
             className="cockpit-hatch pointer-events-none absolute inset-0"
@@ -682,7 +706,7 @@ function ClosingCta() {
               No card required to open an account
             </p>
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );

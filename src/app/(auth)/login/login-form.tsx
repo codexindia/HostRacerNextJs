@@ -6,15 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import {
-  ArrowRight,
-  KeyRound,
-  Loader2,
-  Lock,
-  Mail,
-  ShieldCheck,
-  Sparkles,
-} from "lucide-react";
+import { ArrowRight, KeyRound, Loader2, Lock, Mail, Sparkles } from "lucide-react";
 import { ChallengeStep, FormAlert } from "@/components/auth/challenge-step";
 import { Button } from "@/components/ui/button";
 import { Checkbox, Field, Input, PasswordInput } from "@/components/ui/input";
@@ -190,11 +182,6 @@ export function LoginForm() {
           )}
         </Button>
       </form>
-
-      <p className="mt-7 flex items-center justify-center gap-2 text-[12.5px] text-content-subtle">
-        <ShieldCheck className="size-4 text-signal-ok" />
-        Protected by 256-bit encryption
-      </p>
     </div>
   );
 }

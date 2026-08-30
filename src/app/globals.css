@@ -9,54 +9,61 @@
    on a graphite/off-white editorial base.
    ============================================================ */
 
-@theme {
+/* ------------------------------------------------------------------
+   Colour tokens map onto the custom properties injected by the root
+   layout from `src/config/site.config.ts`. That file is the source of
+   truth for the palette — do not paste hex values back in here.
+   ------------------------------------------------------------------ */
+@theme inline {
   /* ---- Brand: violet → indigo, sampled from the logo ---- */
-  --color-brand-50: #f4f1ff;
-  --color-brand-100: #ebe5ff;
-  --color-brand-200: #d9cdff;
-  --color-brand-300: #bfa8ff;
-  --color-brand-400: #a179fb;
-  --color-brand-500: #8b5cf6;
-  --color-brand-600: #6d40e4;
-  --color-brand-700: #5a2fc4;
-  --color-brand-800: #4a289f;
-  --color-brand-900: #3d2480;
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
 
   /* Exact endpoints of the logo gradient */
-  --color-racer-from: #a855f7;
-  --color-racer-to: #4f46e5;
+  --color-racer-from: var(--racer-from);
+  --color-racer-to: var(--racer-to);
 
   /* ---- Action accent: saffron. Used for CTAs, badges, "fast" cues ---- */
-  --color-flag-50: #fff8ed;
-  --color-flag-100: #ffedd2;
-  --color-flag-200: #ffd7a4;
-  --color-flag-300: #ffba6b;
-  --color-flag-400: #ff9d2e;
-  --color-flag-500: #f97f0a;
-  --color-flag-600: #e06104;
-  --color-flag-700: #b94608;
-  --color-flag-800: #93380e;
-  --color-flag-900: #78300f;
+  --color-flag-50: var(--flag-50);
+  --color-flag-100: var(--flag-100);
+  --color-flag-200: var(--flag-200);
+  --color-flag-300: var(--flag-300);
+  --color-flag-400: var(--flag-400);
+  --color-flag-500: var(--flag-500);
+  --color-flag-600: var(--flag-600);
+  --color-flag-700: var(--flag-700);
+  --color-flag-800: var(--flag-800);
+  --color-flag-900: var(--flag-900);
 
   /* ---- Graphite: the cockpit surfaces ---- */
-  --color-ink-50: #f6f6f8;
-  --color-ink-100: #ececf0;
-  --color-ink-200: #d6d6e0;
-  --color-ink-300: #b1b1c4;
-  --color-ink-400: #8585a1;
-  --color-ink-500: #676785;
-  --color-ink-600: #52526c;
-  --color-ink-700: #434358;
-  --color-ink-800: #2a2a3c;
-  --color-ink-850: #1e1e2c;
-  --color-ink-900: #14141f;
-  --color-ink-950: #0a0a12;
+  --color-ink-50: var(--ink-50);
+  --color-ink-100: var(--ink-100);
+  --color-ink-200: var(--ink-200);
+  --color-ink-300: var(--ink-300);
+  --color-ink-400: var(--ink-400);
+  --color-ink-500: var(--ink-500);
+  --color-ink-600: var(--ink-600);
+  --color-ink-700: var(--ink-700);
+  --color-ink-800: var(--ink-800);
+  --color-ink-850: var(--ink-850);
+  --color-ink-900: var(--ink-900);
+  --color-ink-950: var(--ink-950);
 
   /* ---- Signal colours ---- */
-  --color-signal-ok: #16a34a;
-  --color-signal-warn: #d97706;
-  --color-signal-down: #dc2626;
+  --color-signal-ok: var(--signal-ok);
+  --color-signal-warn: var(--signal-warn);
+  --color-signal-down: var(--signal-down);
+}
 
+@theme {
   /* ---- Type ---- */
   --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -85,29 +92,14 @@
   --color-content-subtle: var(--content-subtle);
 }
 
+/* The --canvas / --surface / --line / --content values themselves come from
+   site.config.ts via the injected style block; only the scheme hint lives here. */
 :root {
   color-scheme: light;
-  /* Warm off-white, not pure #fff — reads as paper, not a template */
-  --canvas: #fbfaf9;
-  --surface: #ffffff;
-  --surface-2: #f5f4f7;
-  --line: #e7e5ea;
-  --line-strong: #d5d2dc;
-  --content: #14141f;
-  --content-muted: #52526c;
-  --content-subtle: #8585a1;
 }
 
 .dark {
   color-scheme: dark;
-  --canvas: #0a0a12;
-  --surface: #14141f;
-  --surface-2: #1e1e2c;
-  --line: #272738;
-  --line-strong: #3a3a50;
-  --content: #f4f4f7;
-  --content-muted: #a6a6bd;
-  --content-subtle: #7c7c96;
 }
 
 /* ============================================================

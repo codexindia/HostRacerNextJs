@@ -58,7 +58,6 @@ export function TelemetryCard({ className }: { className?: string }) {
         <div className="mt-2 flex items-end gap-1.5">
           <CountUp
             value={45}
-            format={(n) => String(Math.round(n))}
             className="font-mono text-[38px] leading-none font-bold text-white tnum"
           />
           <span className="pb-1 font-mono text-[15px] text-white/45">ms</span>
@@ -100,7 +99,7 @@ export function TelemetryCard({ className }: { className?: string }) {
             <CountUp
               value={value}
               duration={1}
-              format={(n) => `${Math.round(n)}%`}
+              suffix="%"
               className="w-9 shrink-0 text-right font-mono text-[12px] font-medium text-white/70 tnum"
             />
           </div>
@@ -113,7 +112,8 @@ export function TelemetryCard({ className }: { className?: string }) {
           <p className="eyebrow text-white/35">Uptime</p>
           <CountUp
             value={99.9}
-            format={(n) => `${n.toFixed(1)}%`}
+            decimals={1}
+            suffix="%"
             className="mt-1 block font-mono text-[17px] font-bold text-white tnum"
           />
         </div>

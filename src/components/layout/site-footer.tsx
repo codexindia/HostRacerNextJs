@@ -8,7 +8,7 @@ import {
   YoutubeIcon,
 } from "@/components/brand/social-icons";
 import { Container } from "@/components/ui/primitives";
-import { footerNav, legalNav, site } from "@/lib/site";
+import { footerNav, legalNav, site } from "@/config/site.config";
 
 const socials = [
   { href: site.social.instagram, label: "Instagram", Icon: InstagramIcon },
@@ -31,7 +31,7 @@ export function SiteFooter() {
       />
 
       <Container className="relative">
-        <div className="grid gap-12 py-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,2fr)] lg:gap-16">
+        <div className="grid gap-12 py-14 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,2fr)] lg:gap-16">
           {/* Brand block */}
           <div>
             <Logo height={30} onDark />

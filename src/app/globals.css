@@ -1,26 +1,288 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Class-based dark mode (driven by next-themes) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ============================================================
+   HOSTRACER DESIGN SYSTEM — "Racing Cockpit"
+   Brand violet→indigo (from logo) + saffron action accent
+   on a graphite/off-white editorial base.
+   ============================================================ */
+
+@theme {
+  /* ---- Brand: violet → indigo, sampled from the logo ---- */
+  --color-brand-50: #f4f1ff;
+  --color-brand-100: #ebe5ff;
+  --color-brand-200: #d9cdff;
+  --color-brand-300: #bfa8ff;
+  --color-brand-400: #a179fb;
+  --color-brand-500: #8b5cf6;
+  --color-brand-600: #6d40e4;
+  --color-brand-700: #5a2fc4;
+  --color-brand-800: #4a289f;
+  --color-brand-900: #3d2480;
+
+  /* Exact endpoints of the logo gradient */
+  --color-racer-from: #a855f7;
+  --color-racer-to: #4f46e5;
+
+  /* ---- Action accent: saffron. Used for CTAs, badges, "fast" cues ---- */
+  --color-flag-50: #fff8ed;
+  --color-flag-100: #ffedd2;
+  --color-flag-200: #ffd7a4;
+  --color-flag-300: #ffba6b;
+  --color-flag-400: #ff9d2e;
+  --color-flag-500: #f97f0a;
+  --color-flag-600: #e06104;
+  --color-flag-700: #b94608;
+  --color-flag-800: #93380e;
+  --color-flag-900: #78300f;
+
+  /* ---- Graphite: the cockpit surfaces ---- */
+  --color-ink-50: #f6f6f8;
+  --color-ink-100: #ececf0;
+  --color-ink-200: #d6d6e0;
+  --color-ink-300: #b1b1c4;
+  --color-ink-400: #8585a1;
+  --color-ink-500: #676785;
+  --color-ink-600: #52526c;
+  --color-ink-700: #434358;
+  --color-ink-800: #2a2a3c;
+  --color-ink-850: #1e1e2c;
+  --color-ink-900: #14141f;
+  --color-ink-950: #0a0a12;
+
+  /* ---- Signal colours ---- */
+  --color-signal-ok: #16a34a;
+  --color-signal-warn: #d97706;
+  --color-signal-down: #dc2626;
+
+  /* ---- Type ---- */
+  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
+
+  /* ---- Motion ---- */
+  --ease-out-race: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-race: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---- Radii: slightly tighter than the usual rounded-2xl default ---- */
+  --radius-card: 14px;
+  --radius-control: 10px;
 }
 
+/* ============================================================
+   SEMANTIC TOKENS — light is the default, dark overrides below
+   ============================================================ */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-content: var(--content);
+  --color-content-muted: var(--content-muted);
+  --color-content-subtle: var(--content-subtle);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  color-scheme: light;
+  /* Warm off-white, not pure #fff — reads as paper, not a template */
+  --canvas: #fbfaf9;
+  --surface: #ffffff;
+  --surface-2: #f5f4f7;
+  --line: #e7e5ea;
+  --line-strong: #d5d2dc;
+  --content: #14141f;
+  --content-muted: #52526c;
+  --content-subtle: #8585a1;
+}
+
+.dark {
+  color-scheme: dark;
+  --canvas: #0a0a12;
+  --surface: #14141f;
+  --surface-2: #1e1e2c;
+  --line: #272738;
+  --line-strong: #3a3a50;
+  --content: #f4f4f7;
+  --content-muted: #a6a6bd;
+  --content-subtle: #7c7c96;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+
+  html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--content);
+    font-family: var(--font-sans);
+    font-feature-settings: "cv11", "ss01";
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    /* Tight, confident display setting */
+    letter-spacing: -0.028em;
+    font-weight: 700;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-brand-500);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brand-500);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Numerals in prices, specs and telemetry must never jitter */
+  .tnum,
+  th,
+  td {
+    font-variant-numeric: tabular-nums;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ============================================================
+   SIGNATURE UTILITIES
+   ============================================================ */
+@utility text-gradient-racer {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-racer-from),
+    var(--color-racer-to)
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@utility bg-gradient-racer {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-racer-from),
+    var(--color-racer-to)
+  );
+}
+
+/* The track swoosh under RACER in the logo, abstracted into a divider */
+@utility speed-rule {
+  height: 2px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--color-racer-from) 0px,
+    var(--color-racer-to) 60px,
+    transparent 60px,
+    transparent 72px
+  );
+  mask-image: linear-gradient(90deg, #000 0%, #000 55%, transparent 100%);
+}
+
+/* Faint diagonal telemetry hatching for cockpit bands */
+@utility cockpit-hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgb(255 255 255 / 0.022) 0px,
+    rgb(255 255 255 / 0.022) 1px,
+    transparent 1px,
+    transparent 7px
+  );
+}
+
+/* Eyebrow label — small caps, wide tracking, mono */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+@utility card-surface {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+/* ============================================================
+   MOTION
+   ============================================================ */
+@keyframes race-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-race-in {
+  animation: race-in 0.6s var(--ease-out-race) both;
+}
+
+@keyframes marquee-track {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-marquee {
+  animation: marquee-track 38s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scrollbar — subtle, matches the graphite palette */
+@supports selector(::-webkit-scrollbar) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+    border: 3px solid var(--canvas);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-400);
+  }
 }

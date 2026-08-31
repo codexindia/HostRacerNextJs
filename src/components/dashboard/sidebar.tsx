@@ -77,7 +77,7 @@ const nav: NavItem[] = [
 
 const secondary: { label: string; href: string; icon: LucideIcon }[] = [
   { label: "Buy hosting", href: "/pricing", icon: ShoppingBag },
-  { label: "Refer & earn", href: "/affiliates", icon: Users },
+  { label: "Refer & earn", href: "/dashboard/affiliates", icon: Users },
   { label: "How-to videos", href: "/support", icon: PlayCircle },
 ];
 

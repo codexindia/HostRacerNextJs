@@ -9,10 +9,14 @@ import {
   LockOpen,
   Plus,
   RefreshCw,
-  Trash2,
   UserRoundX,
 } from "lucide-react";
 import { Button, ButtonLink } from "@/components/ui/button";
+import {
+  AddRecordButton,
+  DNS_PROPAGATION_NOTE,
+  DnsRecordsTable,
+} from "@/components/dashboard/dns-records";
 import {
   EmptyState,
   PageHeader,
@@ -110,7 +114,7 @@ export default function DomainsPage() {
                       </Button>
                     )}
                     <Button
-                      variant="outline"
+                      variant="ghost"
                       size="sm"
                       onClick={() => setExpanded(open ? null : domain.id)}
                       aria-expanded={open}
@@ -123,6 +127,13 @@ export default function DomainsPage() {
                         )}
                       />
                     </Button>
+                    <ButtonLink
+                      href={`/dashboard/domains/${domain.id}`}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Manage
+                    </ButtonLink>
                   </div>
                 </div>
 
@@ -161,68 +172,13 @@ function DnsPanel({
             {nameservers.join(" · ")}
           </p>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => toast.info("Record editor arrives with the DNS API")}
-        >
-          <Plus />
-          Add record
-        </Button>
+        <AddRecordButton />
       </div>
 
-      <div className="overflow-x-auto border-t border-line">
-        <table className="w-full min-w-[640px] text-left">
-          <thead>
-            <tr className="border-b border-line text-[11.5px] tracking-wide text-content-subtle uppercase">
-              <th className="px-5 py-2.5 font-semibold">Type</th>
-              <th className="px-5 py-2.5 font-semibold">Host</th>
-              <th className="px-5 py-2.5 font-semibold">Value</th>
-              <th className="px-5 py-2.5 font-semibold">TTL</th>
-              <th className="px-5 py-2.5" />
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {records.map((record) => (
-              <tr key={record.id} className="group">
-                <td className="px-5 py-3">
-                  <span className="inline-flex rounded-[6px] bg-surface px-2 py-0.5 font-mono text-[11.5px] font-bold text-content">
-                    {record.type}
-                  </span>
-                </td>
-                <td className="px-5 py-3 font-mono text-[13px] text-content">
-                  {record.host}
-                </td>
-                <td className="max-w-[280px] truncate px-5 py-3 font-mono text-[13px] text-content-muted">
-                  {record.priority !== undefined && (
-                    <span className="mr-2 text-content-subtle">
-                      [{record.priority}]
-                    </span>
-                  )}
-                  {record.value}
-                </td>
-                <td className="px-5 py-3 font-mono text-[13px] text-content-subtle tnum">
-                  {record.ttl.toLocaleString("en-IN")}
-                </td>
-                <td className="px-5 py-3 text-right">
-                  <button
-                    type="button"
-                    aria-label={`Delete ${record.type} record for ${record.host}`}
-                    onClick={() => toast.info("Deleting records needs the DNS API")}
-                    className="text-content-subtle opacity-0 transition-opacity group-hover:opacity-100 hover:text-signal-down focus-visible:opacity-100"
-                  >
-                    <Trash2 className="size-4" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DnsRecordsTable records={records} className="border-t border-line" />
 
       <p className="border-t border-line px-5 py-3 text-[12px] text-content-subtle">
-        DNS changes usually take effect within 15 minutes, though some networks
-        cache for up to 24 hours.
+        {DNS_PROPAGATION_NOTE}
       </p>
     </div>
   );

@@ -150,6 +150,30 @@ function Hero() {
 }
 
 /* ================================================================== */
+/* Pricing                                                             */
+/* ================================================================== */
+
+function Pricing() {
+  return (
+    <section id="pricing" className="scroll-mt-24 py-14 lg:py-16">
+      <Container>
+        <Reveal>
+          <SectionHeading
+            eyebrow="Shared hosting"
+            title="Honest pricing, printed in full"
+            lede="The price you sign up on is the price you renew on. Every plan includes free SSL, free migration and our 7-day money-back guarantee."
+            className="mb-9"
+          />
+        </Reveal>
+        <Reveal delay={0.1}>
+          <PlanGrid plans={sharedPlans} />
+        </Reveal>
+      </Container>
+    </section>
+  );
+}
+
+/* ================================================================== */
 /* Products                                                            */
 /* ================================================================== */
 
@@ -244,30 +268,6 @@ function Products() {
             </RevealItem>
           ))}
         </RevealGroup>
-      </Container>
-    </section>
-  );
-}
-
-/* ================================================================== */
-/* Pricing                                                             */
-/* ================================================================== */
-
-function Pricing() {
-  return (
-    <section id="pricing" className="scroll-mt-24 py-14 lg:py-16">
-      <Container>
-        <Reveal>
-          <SectionHeading
-            eyebrow="Shared hosting"
-            title="Honest pricing, printed in full"
-            lede="The price you sign up on is the price you renew on. Every plan includes free SSL, free migration and our 7-day money-back guarantee."
-            className="mb-9"
-          />
-        </Reveal>
-        <Reveal delay={0.1}>
-          <PlanGrid plans={sharedPlans} />
-        </Reveal>
       </Container>
     </section>
   );
@@ -718,8 +718,8 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <Products />
       <Pricing />
+      <Products />
       <WhyUs />
       <Domains />
       <Testimonials />

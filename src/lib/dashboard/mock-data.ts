@@ -150,6 +150,45 @@ export type Domain = {
   renewalAmount: number;
   nameservers: string[];
   records: DnsRecord[];
+  /** Who the registration actually sits with — not all of these are ours. */
+  registrar: string;
+  /** EPP/auth code. Needed to move the domain to another registrar. */
+  authCode: string;
+  dnssec: boolean;
+  /**
+   * Registry rules lock a domain for 60 days after registration or an
+   * inbound transfer, so the manage page has to show a date, not a flag.
+   */
+  transferEligibleOn: string;
+  registrant: Registrant;
+};
+
+/**
+ * WHOIS registrant. One contact is reused across the account here; the
+ * real API returns a per-domain contact set (registrant/admin/tech/billing).
+ */
+export type Registrant = {
+  name: string;
+  organisation?: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  postcode: string;
+  country: string;
+};
+
+const defaultRegistrant: Registrant = {
+  name: "Sudipto Bain",
+  organisation: "Sharma Electronics",
+  email: "billing@sharmaelectronics.in",
+  phone: "+91 98304 41127",
+  address: "14/2 Jessore Road, Flat 3B",
+  city: "Kolkata",
+  state: "West Bengal",
+  postcode: "700055",
+  country: "India",
 };
 
 export const domains: Domain[] = [
@@ -163,6 +202,11 @@ export const domains: Domain[] = [
     locked: true,
     privacy: true,
     renewalAmount: 799,
+    registrar: "Hostracer (Registrar of record: Endurance)",
+    authCode: "Hr7#kQ2mZp4x",
+    dnssec: false,
+    transferEligibleOn: "2026-05-13",
+    registrant: defaultRegistrant,
     nameservers: ["ns1.hostracer.in", "ns2.hostracer.in"],
     records: [
       { id: "r1", type: "A", host: "@", value: "103.148.62.17", ttl: 14400 },
@@ -195,6 +239,11 @@ export const domains: Domain[] = [
     locked: true,
     privacy: false,
     renewalAmount: 1250,
+    registrar: "Hostracer (transferred in from GoDaddy)",
+    authCode: "Bk9$wR6tLn1c",
+    dnssec: false,
+    transferEligibleOn: "2025-11-11",
+    registrant: defaultRegistrant,
     nameservers: ["ns1.hostracer.in", "ns2.hostracer.in"],
     records: [
       { id: "r1", type: "A", host: "@", value: "103.148.62.44", ttl: 14400 },
@@ -218,6 +267,11 @@ export const domains: Domain[] = [
     locked: true,
     privacy: true,
     renewalAmount: 699,
+    registrar: "Hostracer (Registrar of record: Endurance)",
+    authCode: "Vm3@sD8yTf5q",
+    dnssec: true,
+    transferEligibleOn: "2026-03-09",
+    registrant: defaultRegistrant,
     nameservers: ["ns1.hostracer.in", "ns2.hostracer.in"],
     records: [
       { id: "r1", type: "A", host: "@", value: "103.148.62.17", ttl: 14400 },
@@ -596,6 +650,168 @@ export const sessions: LoginSession[] = [
 ];
 
 /* ------------------------------------------------------------------ */
+/* Affiliate programme                                                 */
+/* ------------------------------------------------------------------ */
+
+/**
+ * A referral is only payable once the customer is past the refund window,
+ * which is why "pending" is the busiest state in the table — commission is
+ * earned at signup but held until the order can no longer be reversed.
+ */
+export type ReferralStatus = "pending" | "approved" | "paid" | "reversed";
+
+export type Referral = {
+  id: string;
+  /** Partly masked: affiliates see enough to recognise a lead, not to contact one. */
+  customer: string;
+  signedUpOn: string;
+  product: string;
+  /** Ex-GST value of the first invoice — commission is calculated on this. */
+  orderValue: number;
+  commission: number;
+  status: ReferralStatus;
+  /** When the hold clears. Absent once it already has. */
+  clearsOn?: string;
+  /** Only set on a reversal, so the affiliate knows why it vanished. */
+  note?: string;
+};
+
+export type PayoutStatus = "paid" | "processing";
+
+export type Payout = {
+  id: string;
+  requestedOn: string;
+  paidOn?: string;
+  amount: number;
+  method: string;
+  reference?: string;
+  status: PayoutStatus;
+};
+
+export const referrals: Referral[] = [
+  {
+    id: "ref-2481",
+    customer: "a****n@gmail.com",
+    signedUpOn: "2026-08-24",
+    product: "Premium hosting · 12 months",
+    orderValue: 1299,
+    commission: 520,
+    status: "pending",
+    clearsOn: "2026-10-08",
+  },
+  {
+    id: "ref-2477",
+    customer: "info@****kart.in",
+    signedUpOn: "2026-08-19",
+    product: "Racer 2 VPS · 12 months",
+    orderValue: 899,
+    commission: 180,
+    status: "pending",
+    clearsOn: "2026-10-03",
+  },
+  {
+    id: "ref-2462",
+    customer: "s****a@outlook.com",
+    signedUpOn: "2026-08-02",
+    product: "Starter hosting · 12 months",
+    orderValue: 699,
+    commission: 280,
+    status: "approved",
+  },
+  {
+    id: "ref-2455",
+    customer: "hello@****studio.co.in",
+    signedUpOn: "2026-07-28",
+    product: "Domain · .in · 2 years",
+    orderValue: 1398,
+    commission: 100,
+    status: "approved",
+  },
+  {
+    id: "ref-2431",
+    customer: "r****v@gmail.com",
+    signedUpOn: "2026-07-11",
+    product: "Business hosting · 12 months",
+    orderValue: 2499,
+    commission: 1000,
+    status: "paid",
+  },
+  {
+    id: "ref-2418",
+    customer: "accounts@****foods.com",
+    signedUpOn: "2026-06-30",
+    product: "Premium hosting · 12 months",
+    orderValue: 1299,
+    commission: 520,
+    status: "paid",
+  },
+  {
+    id: "ref-2402",
+    customer: "m****d@yahoo.in",
+    signedUpOn: "2026-06-14",
+    product: "Starter hosting · 12 months",
+    orderValue: 699,
+    commission: 280,
+    status: "reversed",
+    note: "Refunded within 7 days",
+  },
+];
+
+export const payouts: Payout[] = [
+  {
+    id: "po-0114",
+    requestedOn: "2026-07-01",
+    paidOn: "2026-07-04",
+    amount: 3200,
+    method: "UPI · sudipto@okhdfcbank",
+    reference: "UTR 419023774851",
+    status: "paid",
+  },
+  {
+    id: "po-0098",
+    requestedOn: "2026-04-01",
+    paidOn: "2026-04-03",
+    amount: 5400,
+    method: "Bank transfer · HDFC ••4471",
+    reference: "UTR 388154022190",
+    status: "paid",
+  },
+  {
+    id: "po-0081",
+    requestedOn: "2026-01-02",
+    paidOn: "2026-01-06",
+    amount: 2100,
+    method: "Account credit",
+    reference: "CR-88213",
+    status: "paid",
+  },
+];
+
+/**
+ * Commission is a share of the first invoice, not of the renewal — the
+ * rate differs by product because margins do.
+ */
+export const commissionRates = [
+  { product: "Shared & business hosting", rate: "40% of the first invoice" },
+  { product: "VPS and reseller", rate: "20% of the first invoice" },
+  { product: "Domain registration", rate: "₹100 flat, per domain" },
+  { product: "Renewals", rate: "Not commissionable" },
+];
+
+export const affiliate = {
+  code: "SUDIPTO24",
+  joinedOn: "2025-11-18",
+  /** Attribution window for the referral cookie. */
+  cookieDays: 60,
+  /** Refund window a referral has to clear before it can be paid. */
+  holdDays: 45,
+  minPayout: 2000,
+  /** Clicks on any link carrying the code, deduplicated by IP per day. */
+  clicks: { last30: 412, allTime: 3184 },
+  payoutMethod: "UPI · sudipto@okhdfcbank",
+} as const;
+
+/* ------------------------------------------------------------------ */
 /* Helpers                                                             */
 /* ------------------------------------------------------------------ */
 
@@ -635,3 +851,28 @@ export function getTicket(id: string) {
 export const outstandingTotal = invoices
   .filter((i) => i.status === "unpaid" || i.status === "overdue")
   .reduce((sum, i) => sum + i.total, 0);
+
+export function getDomainByName(name: string) {
+  return domains.find((d) => d.name === name);
+}
+
+/** Held until the refund window closes. */
+export const pendingCommission = referrals
+  .filter((r) => r.status === "pending")
+  .reduce((sum, r) => sum + r.commission, 0);
+
+/** Cleared and requestable, once it is over `affiliate.minPayout`. */
+export const availableCommission = referrals
+  .filter((r) => r.status === "approved")
+  .reduce((sum, r) => sum + r.commission, 0);
+
+/** Everything ever earned, reversals excluded. */
+export const lifetimeCommission = referrals
+  .filter((r) => r.status !== "reversed")
+  .reduce((sum, r) => sum + r.commission, 0);
+
+/** Signups that stuck, as a share of clicks — the number affiliates optimise. */
+export const conversionRate =
+  (referrals.filter((r) => r.status !== "reversed").length /
+    affiliate.clicks.allTime) *
+  100;

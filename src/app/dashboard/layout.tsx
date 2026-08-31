@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { LogoLink } from "@/components/brand/logo";
+import { AnnouncementModal } from "@/components/dashboard/announcement-modal";
 import { Sidebar, SidebarDrawer } from "@/components/dashboard/sidebar";
 import { Topbar } from "@/components/dashboard/topbar";
 import { useAuth } from "@/lib/auth/store";
@@ -58,6 +59,11 @@ export default function DashboardLayout({
         <Topbar onOpenMenu={() => setOpenedAt(pathname)} />
         <main className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</main>
       </div>
+
+      {/* Rendered here, below the auth gate — so it only ever shows to a
+          signed-in customer, and survives navigation between dashboard
+          pages without re-triggering. */}
+      <AnnouncementModal />
     </div>
   );
 }

@@ -31,7 +31,7 @@ export function CartButton({ overDark }: { overDark?: boolean }) {
       <span
         className={cn(
           "absolute -top-0.5 -right-0.5 grid size-[18px] place-items-center rounded-full",
-          "bg-flag-400 font-mono text-[10.5px] font-bold text-ink-950",
+          "bg-brand-600 font-mono text-[10.5px] font-bold text-white",
         )}
       >
         {items.length}

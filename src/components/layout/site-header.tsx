@@ -42,20 +42,14 @@ const icons: Record<string, LucideIcon> = {
 
 /**
  * Routes whose first section is a dark cockpit band. On these the header starts
- * transparent so the announcement bar, nav and hero read as one block, then
- * turns into light glass on scroll. Add new dark-hero pages here.
+ * dark so the announcement bar, nav and hero read as one block, then turns into
+ * light glass on scroll. Add new dark-hero pages here.
+ *
+ * Empty since the landing page was rebuilt on a light hero — every route now
+ * opens on canvas or surface-2, and listing one here would float a navy slab
+ * above a white page.
  */
-const DARK_HERO_ROUTES = new Set([
-  "/",
-  "/vps",
-  "/hosting",
-  "/hosting/shared",
-  "/hosting/wordpress",
-  "/hosting/reseller",
-  "/domains",
-  "/pricing",
-  "/about",
-]);
+const DARK_HERO_ROUTES = new Set<string>([]);
 
 /* ------------------------------------------------------------------ */
 /* Announcement bar                                                    */
@@ -76,7 +70,7 @@ function AnnouncementBar() {
           Up to <strong className="font-semibold text-white">50% off</strong>{" "}
           hosting with a free domain and SSL —{" "}
           <span className="hidden sm:inline">use code </span>
-          <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[11.5px] font-semibold tracking-wider text-flag-300">
+          <code className="rounded bg-white/10 px-1.5 py-0.5 font-mono text-[11.5px] font-semibold tracking-wider text-brand-300">
             WELCOME
           </code>
         </p>

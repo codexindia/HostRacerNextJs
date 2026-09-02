@@ -59,7 +59,7 @@ export function DomainSearch({ onDark = true }: { onDark?: boolean }) {
 
         <button
           type="submit"
-          className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-[10px] bg-flag-400 px-6 text-[14.5px] font-semibold text-ink-950 transition-[background-color,transform] duration-200 hover:bg-flag-300 active:translate-y-px"
+          className="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-[10px] bg-brand-600 px-6 text-[14.5px] font-semibold text-white transition-[background-color,transform] duration-200 hover:bg-brand-700 active:translate-y-px"
         >
           Search
           <ArrowRight className="size-4" />

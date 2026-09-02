@@ -5,6 +5,7 @@ import { DomainSearch } from "@/components/home/domain-search";
 import { ButtonLink } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/motion";
 import { Container } from "@/components/ui/primitives";
+import { PreviewPlanGrid } from "./plan-grid";
 import {
   resellerPlans,
   sharedPlans,
@@ -17,10 +18,9 @@ import { site } from "@/config/site.config";
 import { cn, inrNumber } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Preview — new landing page",
-  description:
-    "Design preview of the Hostracer landing page: white, deep navy and electric blue.",
-  robots: { index: false, follow: false },
+  // The root layout supplies the site-wide title template and OG defaults;
+  // the home route only overrides the description.
+  description: site.description,
 };
 
 
@@ -243,37 +243,6 @@ function Proof() {
 /* Pricing                                                             */
 /* ================================================================== */
 
-/** Specs are worded per plan; the table needs one row label for all four. */
-function specValue(plan: Plan, pattern: RegExp): string {
-  const value = plan.specs.find((s) => pattern.test(s.label))?.value ?? "—";
-  // GoPro says "1 hosted domain" where the others say "1" or "Unlimited". The
-  // row label already says Websites, so the qualifier only reads as an
-  // inconsistency here. (Worth confirming the catalog really does mean 1 site.)
-  return value.replace(/^1 hosted domain$/, "1");
-}
-
-const priceRows: { label: string; match: RegExp }[] = [
-  { label: "Websites", match: /websites|hosted domain/i },
-  { label: "Storage", match: /storage/i },
-  { label: "Bandwidth", match: /bandwidth/i },
-  { label: "Databases", match: /databases/i },
-  { label: "Email accounts", match: /email/i },
-];
-
-/**
- * Preview-only copy, kept out of the catalog until the direction is signed
- * off. ON MERGE: fold these into `tagline` plus a new `subtagline` field.
- */
-const planCopy: Record<string, { tagline: string; sub?: string }> = {
-  "shared-gopro": {
-    tagline: "No artificial limits. Just more room to grow.",
-    sub: "LiteSpeed + DDoS protection included.",
-  },
-};
-
-/** The featured column's tint and hairlines, repeated down every row. */
-const featuredCell = "border-x border-x-brand-200 bg-brand-50/45";
-
 function Pricing() {
   return (
     <section
@@ -290,143 +259,20 @@ function Pricing() {
           </p>
         </div>
 
-        <Reveal className="mt-10 overflow-x-auto rounded-[12px] border border-line bg-surface shadow-[0_1px_3px_0_rgba(17,24,39,0.05)]">
-          <table className="w-full min-w-[900px] border-collapse text-left">
-            <thead>
-              <tr>
-                <th className="w-[190px] border-b border-line px-6 py-6 align-bottom">
-                  <span className="block font-mono text-[10.5px] font-bold tracking-[0.12em] text-content-subtle uppercase">
-                    Compare plans
-                  </span>
-                  <span className="mt-2 block text-[13px] leading-snug font-normal text-content-muted">
-                    On a 12-month term. Prices exclude GST.
-                  </span>
-                </th>
-
-                {sharedPlans.map((plan) => {
-                  const copy = planCopy[plan.id];
-                  const price = plan.prices["12mo"];
-
-                  return (
-                    <th
-                      key={plan.id}
-                      className={cn(
-                        "border-b border-line px-6 py-6 align-bottom",
-                        plan.featured &&
-                          `${featuredCell} border-t-2 border-t-brand-300`,
-                      )}
-                    >
-                      <span className="block h-4 font-mono text-[10.5px] font-bold tracking-[0.12em] text-brand-600 uppercase">
-                        {plan.featured ? "Most popular" : ""}
-                      </span>
-                      <span className="mt-2 block text-[19px] font-bold text-content">
-                        {plan.name}
-                      </span>
-                      <span className="mt-1.5 block max-w-[26ch] text-[13.5px] leading-snug font-normal text-content-muted">
-                        {copy?.tagline ?? plan.tagline}
-                      </span>
-                      {copy?.sub && (
-                        <span className="mt-1.5 block text-[12.5px] leading-snug font-normal text-content-subtle">
-                          {copy.sub}
-                        </span>
-                      )}
-
-                      <span className="mt-5 flex items-baseline gap-1">
-                        <span className="font-mono text-[30px] leading-none font-extrabold text-content">
-                          ₹{inrNumber(price.monthly)}
-                        </span>
-                        <span className="text-[12.5px] font-normal text-content-subtle">
-                          /mo
-                        </span>
-                      </span>
-                      <span className="mt-2.5 block text-[12.5px] leading-relaxed font-normal text-content-muted">
-                        ₹{inrNumber(price.total ?? price.monthly * 12)} billed
-                        yearly
-                        <br />
-                        renews at ₹{inrNumber(price.mrpMonthly)}/mo
-                      </span>
-                    </th>
-                  );
-                })}
-              </tr>
-            </thead>
-
-            <tbody>
-              {priceRows.map((row) => (
-                <tr key={row.label} className="border-b border-line">
-                  <th className="px-6 py-4 text-[13.5px] font-medium text-content-muted">
-                    {row.label}
-                  </th>
-                  {sharedPlans.map((plan) => (
-                    <td
-                      key={plan.id}
-                      className={cn(
-                        "px-6 py-4 text-[14px] font-medium text-content",
-                        plan.featured && featuredCell,
-                      )}
-                    >
-                      {specValue(plan, row.match)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-
-              <tr className="border-b border-line">
-                <th className="px-6 py-4 text-[13.5px] font-medium text-content-muted">
-                  Free domain for a year
-                </th>
-                {sharedPlans.map((plan) => (
-                  <td
-                    key={plan.id}
-                    className={cn(
-                      "px-6 py-4",
-                      plan.featured && featuredCell,
-                    )}
-                  >
-                    {plan.freeDomain ? (
-                      <Check className="size-[18px] text-signal-ok" />
-                    ) : (
-                      <span className="text-content-subtle">—</span>
-                    )}
-                  </td>
-                ))}
-              </tr>
-
-              <tr>
-                <th className="px-6 py-6" />
-                {sharedPlans.map((plan) => (
-                  <td
-                    key={plan.id}
-                    className={cn(
-                      "px-6 py-6",
-                      plan.featured && `${featuredCell} border-b-brand-200`,
-                    )}
-                  >
-                    <ButtonLink
-                      href={`/checkout?plan=${plan.id}&term=12mo`}
-                      variant={plan.featured ? "brand" : "outline"}
-                      size="sm"
-                      block
-                    >
-                      Choose plan
-                    </ButtonLink>
-                  </td>
-                ))}
-              </tr>
-            </tbody>
-          </table>
+        <Reveal className="mt-9">
+          <PreviewPlanGrid plans={sharedPlans} />
         </Reveal>
 
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-4">
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
           <p className="max-w-[62ch] text-[13.5px] leading-relaxed text-content-muted">
-            Renewal rates are printed above because you will meet them
+            Renewal rates are printed on every card because you will meet them
             eventually — better now than in month thirteen.
           </p>
           <Link
             href="/pricing"
             className="group flex items-center gap-2 text-[13.5px] font-semibold text-brand-600 underline-offset-4 hover:underline"
           >
-            View all features
+            Compare every feature
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
@@ -459,7 +305,7 @@ const reasons = [
 
 function WhyHostracer() {
   return (
-    <section className="border-b border-line py-16 lg:py-24">
+    <section className="border-b border-line bg-surface-2 py-16 lg:py-24">
       <Container>
         <h2 className="max-w-2xl text-[clamp(1.9rem,3.8vw,2.75rem)] leading-[1.08] font-extrabold tracking-[-0.02em] text-content">
           Hosting without the usual nonsense.
@@ -538,15 +384,26 @@ function Infrastructure() {
           {infrastructure.map((row) => (
             <div
               key={row.key}
-              className="grid gap-3 py-8 md:grid-cols-[150px_minmax(0,300px)_1fr] md:items-baseline md:gap-10"
+              className="relative grid gap-3 py-8 pl-5 md:grid-cols-[150px_minmax(0,300px)_1fr] md:items-baseline md:gap-10 md:pl-7"
             >
-              <dt className="font-mono text-[11.5px] font-bold tracking-[0.14em] text-blue-400">
+              {/* The logo swoosh, stood on end — one rail per spec. */}
+              <span
+                aria-hidden
+                className="absolute top-8 bottom-8 left-0 w-[2px] rounded-full bg-gradient-racer"
+              />
+
+              {/*
+                No 01/02 index here on purpose — WhyHostracer above already
+                owns the numbered-list treatment, and repeating it would make
+                two sections of the same page read as one.
+              */}
+              <dt className="font-mono text-[11.5px] font-bold tracking-[0.14em] text-brand-300">
                 {row.key}
               </dt>
               <dd className="text-[19px] leading-tight font-bold text-white">
                 {row.value}
               </dd>
-              <dd className="max-w-[56ch] text-[14.5px] leading-relaxed text-white/60">
+              <dd className="max-w-[56ch] text-[14.5px] leading-relaxed text-white/70">
                 {row.body}
               </dd>
             </div>
@@ -670,7 +527,10 @@ const products = [
 
 function Products() {
   return (
-    <section className="border-b border-line bg-surface-2 py-16 lg:py-24">
+    // Canvas, not surface-2: DomainBand above is tinted, and two tinted bands
+    // in a row read as one block with a stray rule through it. The tint is
+    // what marks a band as separate, so it only works when it alternates.
+    <section className="border-b border-line py-16 lg:py-24">
       <Container>
         <h2 className="max-w-[20ch] text-[clamp(1.9rem,3.8vw,2.75rem)] leading-[1.08] font-extrabold tracking-[-0.02em] text-content">
           Whatever you&rsquo;re building, we&rsquo;ve got a server for it.
@@ -707,35 +567,122 @@ function Products() {
 /* Domains — the one interactive band on the page                      */
 /* ================================================================== */
 
-function DomainBand() {
-  return (
-    <section className="border-b border-line bg-surface-2 py-16 lg:py-20">
-      <Container>
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center lg:gap-16">
-          <div>
-            <h2 className="max-w-[18ch] text-[clamp(1.7rem,3.2vw,2.4rem)] leading-[1.1] font-extrabold tracking-[-0.02em] text-content">
-              Still calling it &ldquo;my website idea&rdquo;?
-            </h2>
-            <p className="mt-4 max-w-md text-[15.5px] leading-relaxed text-content-muted">
-              Give it a name. Free WHOIS privacy, transfer lock and DNS
-              management come with every domain — and the renewal price is
-              printed next to the first-year one.
-            </p>
-          </div>
+/** Tag wording, and which accent it earns. This page has no saffron. */
+const tldTag: Record<string, { label: string; tone: string }> = {
+  india: { label: "India", tone: "text-brand-600" },
+  cheapest: { label: "Cheapest", tone: "text-signal-ok" },
+  popular: { label: "Popular", tone: "text-brand-600" },
+  new: { label: "New", tone: "text-brand-600" },
+};
 
-          <div>
-            <DomainSearch onDark={false} />
-            <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-[12.5px] text-content-muted">
-              {tlds
-                .filter((t) => [".in", ".com", ".co.in"].includes(t.tld))
-                .map((t) => (
-                  <span key={t.tld} className="font-mono">
-                    {t.tld} from ₹{inrNumber(t.register)}
-                  </span>
+/**
+ * Same split as the live homepage's domain block — search on the left, a
+ * first-year price list on the right — rendered flat, and carrying the
+ * renewal price the copy beside it promises.
+ */
+function DomainBand() {
+  const featured = tlds.slice(0, 6);
+
+  return (
+    <section
+      id="domains"
+      className="scroll-mt-24 border-b border-line bg-surface-2 py-16 lg:py-20"
+    >
+      <Container>
+        <Reveal className="overflow-hidden rounded-[12px] border border-line bg-surface">
+          <div className="grid lg:grid-cols-2">
+            {/* Copy + search */}
+            <div className="p-8 lg:p-10">
+              <p className="font-mono text-[10.5px] font-bold tracking-[0.12em] text-brand-600 uppercase">
+                Domains
+              </p>
+              <h2 className="mt-4 max-w-[18ch] text-[clamp(1.7rem,3.2vw,2.4rem)] leading-[1.1] font-extrabold tracking-[-0.02em] text-content">
+                Still calling it &ldquo;my website idea&rdquo;?
+              </h2>
+              <p className="mt-4 max-w-md text-[15.5px] leading-relaxed text-content-muted">
+                Give it a name. Free WHOIS privacy, transfer lock and DNS
+                management come with every domain — and the renewal price is
+                printed next to the first-year one.
+              </p>
+
+              <div className="mt-8">
+                <DomainSearch onDark={false} />
+              </div>
+
+              <ul className="mt-8 grid gap-x-4 gap-y-2.5 sm:grid-cols-2">
+                {[
+                  "Free WHOIS privacy",
+                  "Domain theft lock",
+                  "Easy DNS management",
+                  "Email forwarding",
+                ].map((f) => (
+                  <li
+                    key={f}
+                    className="flex items-center gap-2 text-[13.5px] text-content-muted"
+                  >
+                    <Check className="size-4 shrink-0 text-signal-ok" />
+                    {f}
+                  </li>
                 ))}
-            </p>
+              </ul>
+            </div>
+
+            {/* Price list */}
+            <div className="border-t border-line bg-surface-2 p-8 lg:border-t-0 lg:border-l lg:p-10">
+              <div className="flex items-baseline justify-between gap-4">
+                <p className="font-mono text-[10.5px] font-bold tracking-[0.12em] text-content-subtle uppercase">
+                  First year · renewal
+                </p>
+                <Link
+                  href="/domains#pricing"
+                  className="text-[13px] font-semibold text-brand-600 underline-offset-4 hover:underline"
+                >
+                  All extensions
+                </Link>
+              </div>
+
+              <ul className="mt-5 divide-y divide-line">
+                {featured.map((t) => {
+                  const tag = t.tag ? tldTag[t.tag] : undefined;
+
+                  return (
+                    <li
+                      key={t.tld}
+                      className="flex items-baseline justify-between gap-4 py-3.5"
+                    >
+                      <span className="flex items-baseline gap-2.5">
+                        <span className="font-mono text-[16px] font-bold text-content">
+                          {t.tld}
+                        </span>
+                        {tag && (
+                          <span
+                            className={cn(
+                              "font-mono text-[10px] font-bold tracking-[0.1em] uppercase",
+                              tag.tone,
+                            )}
+                          >
+                            {tag.label}
+                          </span>
+                        )}
+                      </span>
+                      <span className="text-right">
+                        <span className="font-mono text-[14.5px] font-semibold text-content tnum">
+                          ₹{inrNumber(t.register)}
+                          <span className="text-[12px] font-normal text-content-subtle">
+                            /yr
+                          </span>
+                        </span>
+                        <span className="block font-mono text-[11.5px] text-content-subtle tnum">
+                          renews ₹{inrNumber(t.renew)}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </Container>
     </section>
   );
@@ -755,7 +702,7 @@ function Testimonials() {
   const [lead, ...rest] = testimonials.slice(0, 3);
 
   return (
-    <section className="border-b border-line py-16 lg:py-24">
+    <section className="border-b border-line bg-surface-2 py-16 lg:py-24">
       <Container>
         <div className="grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,.85fr)] lg:gap-16">
           <figure>
@@ -814,31 +761,41 @@ function Testimonials() {
 
 function FinalCta() {
   return (
-    <section className="relative overflow-hidden bg-ink-950 py-20 text-white lg:py-28">
-      <div
-        aria-hidden
-        className="tech-grid pointer-events-none absolute inset-0 opacity-[0.06]"
-      />
-      <Container className="relative">
-        <div className="max-w-3xl">
-          <h2 className="text-[clamp(2.1rem,4.6vw,3.2rem)] leading-[1.05] font-extrabold tracking-[-0.025em] text-white">
-            Go live. Stay live. Sleep better.
-          </h2>
-          <p className="mt-5 max-w-xl text-[16.5px] leading-relaxed text-white/65">
-            Fast hosting, straightforward pricing and humans when you need them.
-          </p>
+    /*
+      A dark card on canvas rather than a full-bleed dark band: the footer
+      below is also ink-950, and two dark blocks meeting would read as one
+      slab with a seam through it. The canvas gutter keeps the closing note
+      and the footer as separate things — the same move the live homepage's
+      closing CTA makes.
+    */
+    <section className="py-16 lg:py-24">
+      <Container>
+        <div className="relative overflow-hidden rounded-[12px] bg-ink-950 px-8 py-14 text-white lg:px-14 lg:py-16">
+          <div
+            aria-hidden
+            className="tech-grid pointer-events-none absolute inset-0 opacity-[0.06]"
+          />
+          <div className="relative max-w-3xl">
+            <h2 className="text-[clamp(2rem,4.2vw,2.9rem)] leading-[1.05] font-extrabold tracking-[-0.025em] text-white">
+              Go live. Stay live. Sleep better.
+            </h2>
+            <p className="mt-5 max-w-xl text-[16.5px] leading-relaxed text-white/65">
+              Fast hosting, straightforward pricing and humans when you need
+              them.
+            </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-4">
-            <ButtonLink href="/register" variant="brand" size="lg">
-              Get Started
-              <ArrowRight />
-            </ButtonLink>
-            <a
-              href={site.contact.phoneHref}
-              className="font-mono text-[13px] text-white/60 underline-offset-4 transition-colors hover:text-white hover:underline"
-            >
-              or call {site.contact.phone}
-            </a>
+            <div className="mt-9 flex flex-wrap items-center gap-4">
+              <ButtonLink href="/register" variant="brand" size="lg">
+                Get Started
+                <ArrowRight />
+              </ButtonLink>
+              <a
+                href={site.contact.phoneHref}
+                className="font-mono text-[13px] text-white/60 underline-offset-4 transition-colors hover:text-white hover:underline"
+              >
+                or call {site.contact.phone}
+              </a>
+            </div>
           </div>
         </div>
       </Container>
@@ -850,7 +807,7 @@ function FinalCta() {
 
 export default function PreviewLandingPage() {
   return (
-    <div className="theme-hr2 bg-canvas">
+    <div className="bg-canvas">
       {/* split · strip · table · rows · dark · process · search · list ·
           quotes · dark — no two neighbours share a composition. */}
       <Hero />

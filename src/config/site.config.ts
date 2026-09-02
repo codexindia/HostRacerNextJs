@@ -64,27 +64,35 @@ export const logo = {
 /* ------------------------------------------------------------------ */
 
 export const colors = {
-  /** Brand: violet→indigo, sampled from the logo. */
+  /**
+   * Brand — the logo's violet. 500 is the wordmark, 600 every primary
+   * action, 700 its hover. One family for identity and actions, so the mark
+   * and the buttons read as the same brand rather than as two.
+   */
   brand: {
-    50: "#f4f1ff",
-    100: "#ebe5ff",
-    200: "#d9cdff",
-    300: "#bfa8ff",
-    400: "#a179fb",
+    50: "#f5f3ff",
+    100: "#ede9fe",
+    200: "#ddd6fe",
+    300: "#c4b5fd",
+    400: "#a78bfa",
     500: "#8b5cf6",
-    600: "#6d40e4",
-    700: "#5a2fc4",
-    800: "#4a289f",
-    900: "#3d2480",
+    600: "#7c3aed",
+    700: "#6d28d9",
+    800: "#5b21b6",
+    900: "#4c1d95",
   },
 
-  /** The exact endpoints of the logo gradient. */
+  /** The logo gradient, kept inside the brand family — no cross-hue jump. */
   racer: {
-    from: "#a855f7",
-    to: "#4f46e5",
+    from: "#8b5cf6",
+    to: "#7c3aed",
   },
 
-  /** Action accent — saffron. CTAs, badges, "go" cues. */
+  /**
+   * Saffron. No longer an action colour — every button and badge fill now
+   * uses `brand`. What is left of this scale is the warm signal the
+   * dashboard leans on: warning badges, usage meters, the promo bar chip.
+   */
   flag: {
     50: "#fff8ed",
     100: "#ffedd2",
@@ -98,51 +106,51 @@ export const colors = {
     900: "#78300f",
   },
 
-  /** Graphite — the dark cockpit surfaces. */
+  /** Deep navy — the dark surfaces. */
   ink: {
-    50: "#f6f6f8",
-    100: "#ececf0",
-    200: "#d6d6e0",
-    300: "#b1b1c4",
-    400: "#8585a1",
-    500: "#676785",
-    600: "#52526c",
-    700: "#434358",
-    800: "#2a2a3c",
-    850: "#1e1e2c",
-    900: "#14141f",
-    950: "#0a0a12",
+    50: "#f7f9fc",
+    100: "#eef2f8",
+    200: "#dbe3ee",
+    300: "#b6c2d4",
+    400: "#8496b0",
+    500: "#667085",
+    600: "#4a5568",
+    700: "#33415c",
+    800: "#1e293b",
+    850: "#16213a",
+    900: "#0f172a",
+    950: "#0b1220",
   },
 
   /** Status colours — uptime, warnings, outages, form errors. */
   signal: {
-    ok: "#16a34a",
+    ok: "#22c55e",
     warn: "#d97706",
     down: "#dc2626",
   },
 
   /** Semantic surfaces for the light theme. */
   light: {
-    canvas: "#fbfaf9",
+    canvas: "#ffffff",
     surface: "#ffffff",
-    surface2: "#f5f4f7",
-    line: "#e7e5ea",
-    lineStrong: "#d5d2dc",
-    content: "#14141f",
-    contentMuted: "#52526c",
-    contentSubtle: "#8585a1",
+    surface2: "#f7f9fc",
+    line: "#e5e7eb",
+    lineStrong: "#d3d8e0",
+    content: "#111827",
+    contentMuted: "#667085",
+    contentSubtle: "#98a2b3",
   },
 
   /** Semantic surfaces for the dark theme. */
   dark: {
-    canvas: "#0a0a12",
-    surface: "#14141f",
-    surface2: "#1e1e2c",
-    line: "#272738",
-    lineStrong: "#3a3a50",
-    content: "#f4f4f7",
-    contentMuted: "#a6a6bd",
-    contentSubtle: "#7c7c96",
+    canvas: "#0b1220",
+    surface: "#0f172a",
+    surface2: "#16213a",
+    line: "#1e293b",
+    lineStrong: "#33415c",
+    content: "#f8fafc",
+    contentMuted: "#94a3b8",
+    contentSubtle: "#64748b",
   },
 } as const;
 

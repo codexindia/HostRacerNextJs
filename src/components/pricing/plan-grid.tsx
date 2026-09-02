@@ -54,7 +54,7 @@ function TermSwitcher({
                   className={cn(
                     "ml-2 rounded-full px-1.5 py-0.5 font-mono text-[10px] tracking-wide uppercase",
                     active
-                      ? "bg-flag-400 text-ink-950"
+                      ? "bg-brand-600 text-white"
                       : "bg-flag-400/15 text-flag-600 dark:text-flag-300",
                   )}
                 >

@@ -30,7 +30,7 @@ const badge = cva(
       variant: {
         brand:
           "bg-brand-50 text-brand-700 dark:bg-brand-500/12 dark:text-brand-300",
-        flag: "bg-flag-400 text-ink-950",
+        flag: "bg-brand-600 text-white",
         soft: "bg-surface-2 text-content-muted",
         outline: "border border-line-strong text-content-muted",
         onDark: "border border-white/15 bg-white/8 text-white/85",

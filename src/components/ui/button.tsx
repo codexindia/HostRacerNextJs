@@ -21,7 +21,7 @@ const button = cva(
           "bg-ink-950 text-white hover:bg-ink-800 dark:bg-white dark:text-ink-950 dark:hover:bg-ink-100",
         /** The "go" button: buy, checkout, start. Saffron reads as motion. */
         accent:
-          "bg-flag-400 text-ink-950 hover:bg-flag-300 shadow-[0_1px_0_0_rgba(0,0,0,0.06)]",
+          "bg-brand-600 text-white hover:bg-brand-700 shadow-[0_1px_0_0_rgba(0,0,0,0.06)]",
         /** Solid brand blue — the primary CTA on marketing pages */
         brand:
           "bg-brand-600 text-white hover:bg-brand-700 shadow-[0_1px_2px_0_rgba(17,24,39,0.08)]",

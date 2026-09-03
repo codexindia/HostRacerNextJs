@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { Skeleton } from "@/components/ui/skeleton";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
@@ -19,13 +20,13 @@ export default function LoginPage() {
 
 function FormSkeleton() {
   return (
-    <div className="animate-pulse space-y-5">
-      <div className="h-8 w-3/5 rounded-md bg-surface-2" />
-      <div className="h-4 w-2/5 rounded bg-surface-2" />
-      <div className="h-28 rounded-[12px] bg-surface-2" />
-      <div className="h-12 rounded-[10px] bg-surface-2" />
-      <div className="h-12 rounded-[10px] bg-surface-2" />
-      <div className="h-13 rounded-[11px] bg-surface-2" />
+    <div className="space-y-5">
+      <Skeleton className="h-8 w-3/5 rounded-[10px]" />
+      <Skeleton className="h-4 w-2/5 rounded-[6px]" />
+      <Skeleton className="h-28 rounded-[12px]" />
+      <Skeleton className="h-12 rounded-[10px]" />
+      <Skeleton className="h-12 rounded-[10px]" />
+      <Skeleton className="h-13 rounded-[11px]" />
     </div>
   );
 }
